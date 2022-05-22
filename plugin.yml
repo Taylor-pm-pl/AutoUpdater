@@ -1,0 +1,14 @@
+name: AutoUpdater
+version: 0.0.1
+api: 4.0.0
+main: davidglitch04\AutoUpdater\AutoUpdater
+src-namespace-prefix: davidglitch04\AutoUpdater
+load: STARTUP
+description: "Update PocketMine automatically"
+website: https://github.com/DavidGlitch04
+author: DavidGlitch04
+
+permissions:
+  autoupdater.allow.command:
+    description: "Allow player to use autoupdater command"
+    default: op
