@@ -5,11 +5,14 @@ namespace davidglitch04\AutoUpdater\task;
 use davidglitch04\AutoUpdater\AutoUpdater;
 use pocketmine\scheduler\Task;
 use pocketmine\Server;
+use pocketmine\utils\Internet;
 use pocketmine\utils\TextFormat;
 
 class Query extends Task
 {
     protected AutoUpdater $autoUpdater;
+
+    protected const URL = "https://api.github.com/repos/pmmp/PocketMine-MP/releases/latest";
     
     public function __construct(AutoUpdater $autoUpdater)
     {
@@ -19,11 +22,11 @@ class Query extends Task
     public function onRun(): void
     {
         $currentAPI = Server::getInstance()->getPocketMineVersion();
-        $data = $this->autoUpdater->getData();
+        $data = json_decode(Internet::getURL(self::URL)->getBody(), true);
         $logger = Server::getInstance()->getLogger();
         $prefix = $this->autoUpdater->getPrefix();
         if (isset($data["name"])){
-            $lastAPI = $this->autoUpdater->getLastAPI();
+            $lastAPI = explode(" ", $data["name"])[1] ?? '';
             if (version_compare($lastAPI, $currentAPI, '>')){
                 $phar = $this->autoUpdater->getPharName();
                 $link = "https://github.com/pmmp/PocketMine-MP/releases/download/".$lastAPI."/PocketMine-MP.phar";

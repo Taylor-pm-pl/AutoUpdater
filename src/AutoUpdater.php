@@ -6,14 +6,11 @@ use davidglitch04\AutoUpdater\command\MainCommand;
 use davidglitch04\AutoUpdater\task\Query;
 use pocketmine\plugin\PluginBase;
 use pocketmine\utils\Config;
-use pocketmine\utils\Internet;
 
 class AutoUpdater extends PluginBase
 {
 
     public static Config $config;
-
-    protected const URL = "https://api.github.com/repos/pmmp/PocketMine-MP/releases/latest";
 
     protected const PREFIX = "&7[&9Auto&aUpdater&7] > ";
 
@@ -24,13 +21,6 @@ class AutoUpdater extends PluginBase
         $time = intval(self::$config->get("update-check-time", 10)) * 20;
         $this->getScheduler()->scheduleRepeatingTask(new Query($this), $time*60);
         $this->getServer()->getCommandMap()->register('autoupdater', new MainCommand($this));
-    }
-
-    public function getData() : array
-    {
-        $json = Internet::getURL(self::URL);
-        $json = json_decode($json->getBody(), true);
-        return $json;
     }
 
     public function getPharName() : string
@@ -51,15 +41,6 @@ class AutoUpdater extends PluginBase
     public function getStartScript() : string
     {
         return self::$config->get("start-script", "");
-    }
-
-    public function getLastAPI() : string
-    {
-        if (isset($this->getData()["name"])){
-            $name = explode(" ", $this->getData()["name"]);
-            return $name[1];
-        }
-        return "";
     }
 
     public function getTimeout() : int
